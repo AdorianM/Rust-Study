@@ -19,12 +19,12 @@ impl Angle {
         Self {value, unit}
     }
 
-    pub fn from_radians(self, value: f64) -> Self {
-        Angle::new(value, AngleUnit::Radians)
+    pub fn from_radians(value: f64) -> Self {
+        Self::new(value, AngleUnit::Radians)
     }
 
-    pub fn from_degrees(self, value: f64) -> Self {
-        Angle::new(value, AngleUnit::Degrees) 
+    pub fn from_degrees(value: f64) -> Self {
+        Self::new(value, AngleUnit::Degrees) 
     }
 
     pub fn as_radians(self) -> f64 {

@@ -1,8 +1,10 @@
 use core::fmt;
+use std::num;
 use std::ops::Add;
 use std::fmt::Display;
 
 use crate::angle::Angle;
+use crate::polar::Polar;
 
 #[derive(Debug)]
 #[derive(Copy, Clone)]
@@ -12,6 +14,20 @@ pub struct Complex {
 }
 
 impl Complex {
+
+    pub fn as_polar(self) -> Polar {
+        Polar { magnitude: self.magnitude(), angle: self.argument() }
+    }
+
+    pub fn from_euler(angle: Angle) -> Complex {
+        // Euler's Formula -> e^(ix) = cos(x) + i*sin(x)
+        // e^(i*angle) = cos(angle) + i*sin(angle)
+
+        let r = angle.as_radians().cos();
+        let i = angle.as_radians().sin();
+
+        Complex { r, i }
+    }
     pub fn conjugate(self) -> Complex {
         Complex { r: self.r, i: -self.i }
     }
@@ -21,7 +37,31 @@ impl Complex {
     }
 
     pub fn argument(self) -> Angle {
+        let angle_value = self.i.atan2(self.r); 
+        Angle::from_radians(angle_value);
         Angle { value: self.i.atan2(self.r), unit: crate::angle::AngleUnit::Radians }
+    }
+
+    pub fn pow(&self, exponent: f64) -> Complex {
+        // a + i*b = r * (cos(θ) + i*sin(θ))
+        // r = sqrt(a^2 + b^2)
+        // =>
+        // (a + i*b)^n = r^n * (cos(nθ) + i*sin(nθ))
+        let polar_form = self.as_polar();
+        let new_magnitude = polar_form.magnitude.powf(exponent);
+        let new_angle = Angle::from_radians(polar_form.angle.as_radians() * exponent);
+
+        Polar { magnitude: new_magnitude, angle: new_angle }.as_complex()
+    }
+
+    pub fn root(&self, order: f64) -> Complex {
+        self.pow(1.0/order)
+    } 
+
+    // If for any reason I decide to mix this with the actual num::complex::Complex implementation
+
+    pub fn as_std_complex(self) {
+        todo!()
     }
 }
 
@@ -63,6 +103,13 @@ impl std::ops::Div<Complex> for Complex {
         Complex { r, i }
     }
 }
+
+impl std::ops::Neg for Complex {
+    type Output = Complex;
+    fn neg(self) -> Self::Output {
+        Complex { r: -self.r, i: -self.i }
+    }
+}
 impl Display for Complex {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         if let Some(precision) = f.precision() {
@@ -77,7 +124,7 @@ impl Display for Complex {
                         "-"
                     };
     
-                    write!(f, "{:.precision$} {} {:.precision$}", self.r, sign, self.i.abs(), precision = precision)
+                    write!(f, "{:.precision$} {} {:.precision$}i", self.r, sign, self.i.abs(), precision = precision)
                 }
             }
         } else {
