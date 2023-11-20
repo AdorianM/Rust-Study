@@ -1,8 +1,12 @@
+#[allow(dead_code)]
 mod complex;
 mod angle;
 mod polar;
 use crate::complex::Complex;
 use crate::angle::Angle;
+
+mod complex_plotter;
+use complex_plotter::*;
 
 fn main() {
     let number_one = Complex { r: 5.0, i: 10.0 };
@@ -48,4 +52,6 @@ fn main() {
     let complex_to_pow = Complex { r: 3.0, i: 1.0};
     println!("Power: {:.2}", complex_to_pow.pow(3.0));
     println!("Root: {:.2}", complex_to_pow.root(2.0));
+
+    let _ = plot_complex(&[complex_to_pow, complex_depolarized]);
 }

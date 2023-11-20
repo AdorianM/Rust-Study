@@ -1,5 +1,4 @@
 use core::fmt;
-use std::num;
 use std::ops::Add;
 use std::fmt::Display;
 
@@ -56,7 +55,16 @@ impl Complex {
 
     pub fn root(&self, order: f64) -> Complex {
         self.pow(1.0/order)
-    } 
+    }
+
+    pub fn ln(&self) -> Complex {
+        // ln(r * e^(i*θ)) = ln(r) + i*θ
+        let polar_form = self.as_polar();
+        let r = polar_form.magnitude.ln();
+        let i = polar_form.angle.as_radians();
+
+        Complex { r, i }
+    }
 
     // If for any reason I decide to mix this with the actual num::complex::Complex implementation
 
