@@ -48,10 +48,22 @@ fn main() {
     println!("Negated: {:.2}", -complex_to_be_polarized);
 
     println!("-----------------");
-
+    
     let complex_to_pow = Complex { r: 3.0, i: 1.0};
     println!("Power: {:.2}", complex_to_pow.pow(3.0));
     println!("Root: {:.2}", complex_to_pow.root(2.0));
 
-    let _ = plot_complex(&[complex_to_pow, complex_depolarized]);
+    let complex_to_plot = vec![Complex { r: 9.69, i: 3.21 },
+    Complex { r: -7.67, i: 7.86 },
+    Complex { r: 7.97, i: 0.76 },
+    Complex { r: -0.26, i: -5.78 },
+    Complex { r: 3.45, i: -9.66 },
+    Complex { r: -0.36, i: -7.29 },
+    Complex { r: 0.21, i: 2.38 },
+    Complex { r: -4.23, i: 1.29 },
+    Complex { r: 7.68, i: -9.56 },
+    Complex { r: -9.83, i: -6.54 }
+    ];
+    println!("-----------------");
+    let _ = plot_complex_normalized(&complex_to_plot, (-1f32, 5f32), (-5f32, 1f32));
 }
